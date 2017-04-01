@@ -13,45 +13,42 @@ extern "C" {
 
 
 	/*name of data , and type of data*/
-#define CGDS_GENERATE_ARRAYLIST( name, type )								\
-typedef type name##Val;														\
-typedef struct{																\
-	name##Val *data;														\
-	int length;																\
-	int _alloced;															\
-}name;																		\
-																			\
-name * name##_new( int length )												\
-{																			\
-	name *new_arraylist;													\
-	if(length <= 0) {														\
-		length = CGDS_ARRAYLIST_DEFAULT_LEN;								\
-	}																		\
-	new_arraylist = MF_MALLOC(name);										\
-	if (!new_arraylist) {													\
-		return NULL;														\
-	}																		\
-	new_arraylist->_alloced = length;										\
-	new_arraylist->length = 0;												\
-																			\
-	new_arraylist->data = MF_MALLOC_LEN(name##Val, length);					\
-																			\
-	if (new_arraylist->data == NULL) {										\
-		free(new_arraylist);												\
-		return NULL;														\
-	}																		\
-																			\
-	return new_arraylist;													\
-}																			\
-																			\
-void name##_free( name *arraylist )											\
-{																			\
-	if (arraylist != NULL) {												\
-		free(arraylist->data);												\
-		free(arraylist);													\
-	}																		\
-}																			\
-																			\
+#define CGDS_GENERATE_ARRAYLIST( name, type )\
+typedef type name##Val;	\
+typedef struct{\
+	name##Val *data;\
+	int length;\
+	int _alloced;\
+}name;\
+\
+name * name##_new( int length )\
+{\
+	name *new_arraylist;\
+	if(length <= 0) {\
+		length = CGDS_ARRAYLIST_DEFAULT_LEN;\
+	}\
+	new_arraylist = MF_MALLOC(name);\
+	if (!new_arraylist) {\
+		return NULL;\
+	}\
+	new_arraylist->_alloced = length;\
+	new_arraylist->length = 0;\
+	new_arraylist->data = MF_MALLOC_LEN(name##Val, length);\
+	if (new_arraylist->data == NULL) {\
+		free(new_arraylist);\
+		return NULL;\
+	}\
+	return new_arraylist;\
+}\
+\
+void name##_free( name *arraylist )	\
+{\
+	if (arraylist != NULL) {\
+		free(arraylist->data);\
+		free(arraylist);\
+	}\
+}\
+\
 static int name##_enlarge( name *arraylist )\
 {\
 	name##Val *data;\
