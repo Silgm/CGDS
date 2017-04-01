@@ -15,7 +15,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.c">
+    <ClInclude Include="CGDS_test\tool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CGDS\inc\cgds\cgds_arraylist.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CGDS\inc\cgds\cgds_tool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CGDS_test\arraylist_test.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
