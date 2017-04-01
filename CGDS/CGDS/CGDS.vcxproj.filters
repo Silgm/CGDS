@@ -24,9 +24,15 @@
     <ClInclude Include="CGDS\inc\cgds\cgds_tool.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="CGDS\inc\cgds\cgds_slist.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CGDS_test\cgds_arraylist_test.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CGDS_test\cgds_slist_test.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

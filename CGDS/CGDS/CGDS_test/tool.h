@@ -13,6 +13,18 @@ extern "C" {
 #include <limits.h>
 #include <assert.h>
 
+
+#define TEST_CGSD_ARRAYLIST
+#define TEST_CGSD_SLIST
+
+#undef TEST_CGSD_SLIST
+
+
+
+
+
+
+
 #ifdef __cplusplus
 }
 #endif

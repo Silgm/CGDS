@@ -2,6 +2,8 @@
 
 #include "cgds/cgds_arraylist.h"
 
+#ifndef TEST_CGSD_ARRAYLIST
+
 CGDS_GENERATE_ARRAYLIST(ArrayListInt, int)
 
 int main()
@@ -21,4 +23,7 @@ int main()
 	ArrayListInt_free(aln);
 	return EXIT_SUCCESS;
 }
+
+#endif
+
 
