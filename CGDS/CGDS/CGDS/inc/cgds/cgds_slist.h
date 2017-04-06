@@ -10,21 +10,21 @@ typedef type name##Val;\
 typedef struct _##name##Entry{\
 	name##Val data;\
 	struct _##name##Entry *next;\
-}name##Entry, *name##Head;\
+}name##Entry, * name##Head;\
 \
-void name##_free( const name##Head *list)\
+void name##_free( name##Head list )\
 {\
-	name##Entry *entry = (*list)->next;\
+	name##Entry *entry = list->next;\
 	name##Entry *next;\
 	while (entry != NULL) {\
 		next = entry->next;\
 		free(entry);\
 		entry = next;\
 	}\
-	(*list)->next = NULL;\
+	list->next = NULL;\
 }\
 \
-int name##_InitHead( name##Head *list)\
+int name##_initHead( name##Head *list)\
 {\
 	*list = (name##Entry *)malloc(sizeof(name##Entry));\
 	if (*list == NULL){\
@@ -35,34 +35,33 @@ int name##_InitHead( name##Head *list)\
 	return 0;\
 }\
 \
-void name##_ClearHead( name##Head *list)\
+void name##_clearHead( name##Head *list)\
 {\
 	if (*list != NULL){\
 		free(*list);\
 	}\
 }\
 \
-name##Entry * name##_prepend( const name##Head *list, name##Val data)\
+name##Entry * name##_prepend( name##Head list, name##Val data)\
 {\
 	name##Entry *newentry;\
 	newentry = (name##Entry *)malloc(sizeof(name##Entry));\
 	if (newentry == NULL) {\
 		return NULL;\
 	}\
-	if ((*list)->next == NULL) {\
+	if (list->next == NULL) {\
 		newentry->data = data;\
 		newentry->next = NULL;\
-		(*list)->next = newentry;\
+		list->next = newentry;\
 	}else {\
 		newentry->data = data;\
-		newentry->next = (*list)->next;\
-		(*list)->next = newentry;\
-		newentry->next->next = NULL;\
+		newentry->next = list->next;\
+		list->next = newentry;\
 	}\
 	return newentry;\
 }\
 \
-name##Entry * name##_append( const name##Head *list, name##Val data)\
+name##Entry * name##_append( name##Head list, name##Val data)\
 {\
 	name##Entry *rover;\
 	name##Entry *newentry;\
@@ -72,11 +71,11 @@ name##Entry * name##_append( const name##Head *list, name##Val data)\
 	}\
 	newentry->data = data;\
 	newentry->next = NULL;\
-	for (rover = *list; rover->next != NULL; rover = rover->next);\
+	for (rover = list; rover->next != NULL; rover = rover->next);\
 	rover->next = newentry;\
 	return newentry;\
 }\
-name##Entry * name##_insert( const name##Head *list, name##Val data, unsigned long index)\
+name##Entry * name##_insert( name##Head list, name##Val data, unsigned long index)\
 {\
 	name##Entry *rover, *tmp;\
 	name##Entry *newentry;\
@@ -86,18 +85,18 @@ name##Entry * name##_insert( const name##Head *list, name##Val data, unsigned lo
 		return NULL;\
 	}\
 	newentry->data = data;\
-	for (rover = *list, i = 0; rover->next != NULL && i < index; ++i, rover = rover->next);\
+	for (rover = list, i = 0; rover->next != NULL && i < index; ++i, rover = rover->next);\
 	tmp = rover->next;\
 	rover->next = newentry;\
 	newentry->next = tmp;\
 	return newentry;\
 }\
 \
-name##Entry * name##_nth_entry( const name##Head *list, unsigned int n)\
+name##Entry * name##_nth_entry( name##Head list, unsigned int n)\
 {\
 	name##Entry *entry;\
 	unsigned int i;\
-	entry = (*list)->next;\
+	entry = list->next;\
 	for (i = 0; i<n; ++i) {\
 		if (entry == NULL) {\
 			return NULL;\
@@ -107,7 +106,7 @@ name##Entry * name##_nth_entry( const name##Head *list, unsigned int n)\
 	return entry;\
 }\
 \
-name##Val name##_nth_data( const name##Head *list, unsigned int n)\
+name##Val name##_nth_data( name##Head list, unsigned int n)\
 {\
 	name##Entry *entry;\
 	entry = name##_nth_entry(list, n);\
@@ -119,15 +118,15 @@ name##Val name##_nth_data( const name##Head *list, unsigned int n)\
 	}\
 }\
 \
-unsigned long name##_length( const name##Head *list)\
+unsigned long name##_length( name##Head list)\
 {\
-	name##Entry *entry = (*list)->next;;\
+	name##Entry *entry = list->next;;\
 	unsigned long length = 0;\
 	for (;entry != NULL; ++length, entry = entry->next);\
 	return length;\
 }\
 \
-int name##_to_array( const name##Head *list, name##Val *buff, unsigned long buffLen)\
+int name##_to_array( name##Head list, name##Val *buff, unsigned long buffLen)\
 {\
 	name##Entry *rover = NULL;\
 	unsigned int length = 0;\
@@ -136,23 +135,23 @@ int name##_to_array( const name##Head *list, name##Val *buff, unsigned long buff
 	if (buff == NULL) {\
 		return 1;\
 	}\
-	for (rover = (*list)->next, i = 0; i < length && i < buffLen; ++i) {\
+	for (rover = list->next, i = 0; i < length && i < buffLen; ++i) {\
 		buff[i] = rover->data;\
 		rover = rover->next;\
 	}\
 	return 0;\
 }\
-int name##_remove_entry( const name##Head *list, name##Entry *entry)\
+int name##_remove_entry( name##Head list, name##Entry *entry)\
 {\
 	name##Entry *rover;\
-	if ((*list)->next == NULL || entry == NULL) {\
+	if (list->next == NULL || entry == NULL) {\
 		return 0;\
 	}\
-	if ((*list)->next  == entry) {\
-		(*list)->next  = entry->next;\
+	if (list->next  == entry) {\
+		list->next  = entry->next;\
 	}\
 	else {\
-		rover = (*list)->next ;\
+		rover = list->next ;\
 		while (rover != NULL && rover->next != entry) {\
 			rover = rover->next;\
 		}\

@@ -148,10 +148,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CGDS_test\cgds_arraylist_test.c" />
+    <ClCompile Include="CGDS_test\cgds_list_test.c" />
     <ClCompile Include="CGDS_test\cgds_slist_test.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CGDS\inc\cgds\cgds_arraylist.h" />
+    <ClInclude Include="CGDS\inc\cgds\cgds_list.h" />
     <ClInclude Include="CGDS\inc\cgds\cgds_slist.h" />
     <ClInclude Include="CGDS\inc\cgds\cgds_tool.h" />
     <ClInclude Include="CGDS_test\tool.h" />
