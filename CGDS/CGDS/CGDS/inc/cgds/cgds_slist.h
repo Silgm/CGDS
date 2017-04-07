@@ -24,7 +24,7 @@ void name##_free( name##Head list )\
 	list->next = NULL;\
 }\
 \
-int name##_initHead( name##Head *list)\
+int name##_initHead( name##Head *list )\
 {\
 	*list = (name##Entry *)malloc(sizeof(name##Entry));\
 	if (*list == NULL){\
@@ -42,26 +42,20 @@ void name##_clearHead( name##Head *list)\
 	}\
 }\
 \
-name##Entry * name##_prepend( name##Head list, name##Val data)\
+name##Entry * name##_prepend( name##Head list, name##Val data )\
 {\
 	name##Entry *newentry;\
 	newentry = (name##Entry *)malloc(sizeof(name##Entry));\
 	if (newentry == NULL) {\
 		return NULL;\
 	}\
-	if (list->next == NULL) {\
-		newentry->data = data;\
-		newentry->next = NULL;\
-		list->next = newentry;\
-	}else {\
-		newentry->data = data;\
-		newentry->next = list->next;\
-		list->next = newentry;\
-	}\
+	newentry->data = data;\
+	newentry->next = list->next;\
+	list->next = newentry;\
 	return newentry;\
 }\
 \
-name##Entry * name##_append( name##Head list, name##Val data)\
+name##Entry * name##_append( name##Head list, name##Val data )\
 {\
 	name##Entry *rover;\
 	name##Entry *newentry;\
@@ -92,12 +86,12 @@ name##Entry * name##_insert( name##Head list, name##Val data, unsigned long inde
 	return newentry;\
 }\
 \
-name##Entry * name##_nth_entry( name##Head list, unsigned int n)\
+name##Entry * name##_nth_entry( name##Head list, unsigned long n )\
 {\
 	name##Entry *entry;\
-	unsigned int i;\
+	unsigned long i;\
 	entry = list->next;\
-	for (i = 0; i<n; ++i) {\
+	for (i = 0; i < n; ++i) {\
 		if (entry == NULL) {\
 			return NULL;\
 		}\
@@ -106,7 +100,7 @@ name##Entry * name##_nth_entry( name##Head list, unsigned int n)\
 	return entry;\
 }\
 \
-name##Val name##_nth_data( name##Head list, unsigned int n)\
+name##Val name##_nth_data( name##Head list, unsigned long n)\
 {\
 	name##Entry *entry;\
 	entry = name##_nth_entry(list, n);\
@@ -164,6 +158,24 @@ int name##_remove_entry( name##Head list, name##Entry *entry)\
 	}\
 	free(entry);\
 	return 1;\
+}\
+\
+void name##_rev( name##Head list )\
+{\
+	name##Entry *thisNode = list->next, *nextNode = NULL;\
+	if (thisNode) {\
+		nextNode = list->next->next;\
+		list->next = NULL;\
+	}\
+	else {\
+		return;\
+	}\
+	for (; nextNode; thisNode = nextNode, nextNode = nextNode->next) {\
+		thisNode->next = list->next;\
+		list->next = thisNode;\
+	}\
+	thisNode->next = list->next;\
+	list->next = thisNode; \
 }
 
 #endif // CGDS_SLIST_H

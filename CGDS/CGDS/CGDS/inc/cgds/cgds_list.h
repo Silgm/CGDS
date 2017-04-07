@@ -62,7 +62,7 @@ name##Entry *name##_prepend( name##Head list, name##Val data){\
 	return newentry;\
 }\
 \
-name##Entry *name##_append( name##Head list, name##Val data){\
+name##Entry *name##_append( name##Head list, name##Val data ){\
 	name##Entry *newentry = NULL;\
 	name##Entry *rover = NULL;\
 	newentry = (name##Entry * )(malloc( sizeof(name##Entry) ));\
@@ -78,7 +78,91 @@ name##Entry *name##_append( name##Head list, name##Val data){\
 	rover->next = newentry;\
 	return newentry;\
 }\
-
+name##Entry *name##_insert( name##Head list, name##Val data , unsigned long pos)\
+{\
+	name##Entry *entry = list->next;\
+	name##Entry *newentry = (name##Entry *)(malloc(sizeof(name##Entry)));\
+	unsigned long index;\
+	newentry->data = data;\
+	for (index = 0; index < pos && entry->next; index++, entry = entry->next);\
+	if( pos - index == 1){\
+		newentry->next = NULL;\
+		entry->next = newentry;\
+		newentry->prev = entry;\
+		return newentry;\
+	}\
+	else if (index == pos){\
+		newentry->prev = entry->prev;\
+		newentry->next = entry;\
+		if(entry->prev)\
+			entry->prev->next = newentry;\
+		else\
+			list->next = newentry;\
+		entry->prev = newentry;\
+	}\
+	else {\
+		free(newentry);\
+		return NULL;\
+	}\
+	return newentry;\
+}\
+\
+name##Entry *name##_nth_entry( name##Head list, unsigned long n)\
+{\
+	name##Entry *entry = list->next;\
+	unsigned long index;\
+	for (index = 0; index < n; index++){\
+		if (!entry)\
+			return NULL;\
+		entry = entry->next;\
+	}\
+	return entry; \
+}\
+\
+name##Val name##_nth_data( name##Head list, unsigned long n)\
+{\
+	name##Entry *entry = list->next;\
+	unsigned long index;\
+	for (index = 0; index < n; index++){\
+		if (!entry)\
+			return (name##Val)(0);\
+		entry = entry->next;\
+	}\
+	return entry->data; \
+}\
+\
+unsigned long name##_length(  name##Head list )\
+{\
+	name##Entry *entry = list->next;\
+	unsigned long length;\
+	for(length = 0; entry; entry = entry->next, length++);\
+	return length;\
+}\
+//ListEntry *list_nth_entry(ListEntry *list, int n)
+//{
+//ListEntry *entry;
+//int i;
+//
+///* Negative values are always out of range */
+//
+//if (n < 0) {
+//	return NULL;
+//}
+//
+///* Iterate through n list entries to reach the desired entry.
+//* Make sure we do not reach the end of the list. */
+//
+//entry = list;
+//
+//for (i = 0; i<n; ++i) {
+//
+//	if (entry == NULL) {
+//		return NULL;
+//	}
+//	entry = entry->next;
+//}
+//
+//return entry;
 #endif
 
 
