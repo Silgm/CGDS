@@ -160,6 +160,11 @@ int name##_remove_entry( name##Head list, name##Entry *entry)\
 	return 1;\
 }\
 \
+int name##_remove_index( name##Head list, unsigned long index)\
+{\
+	return name##_remove_entry( list , name##_nth_entry( list, index ));\
+}\
+\
 void name##_rev( name##Head list )\
 {\
 	name##Entry *thisNode = list->next, *nextNode = NULL;\
