@@ -1,125 +1,149 @@
 #include "tool.h"
-#include "cgds/cgds_slist.h"
+#include "cgds_slist_test_inc.h"
 
 
 #ifndef TEST_CGSD_SLIST
 
-CGDS_GENERATE_SINGLELIST(SListInt, int)
-
-/*以副本的方式合并两个升序链表*/
-void SListInt_combine(SListIntHead slist1, SListIntHead slist2, SListIntHead slistResult ) {
-	SListIntEntry *it1 = slist1->next, *it2 = slist2->next;
-	SListIntEntry *itResult = slistResult;
-	
-	while (it1 || it2) {
-		itResult->next = MF_MALLOC(SListIntEntry);
-		itResult->next->next = NULL;
-		itResult = itResult->next;
-
-		/**/
-		if (it1 && it2) {
-			if (it1->data < it2->data) {
-				itResult->data = it1->data;
-				it1 = it1->next;
-			}
-			else {
-				itResult->data = it2->data;
-				it2 = it2->next;
-			}
-		}
-		else if (it1)
-			itResult->data = it1->data, it1 = it1->next;
-		else
-			itResult->data = it2->data, it2 = it2->next;
-	}
-}
-
-/*以非副本的方式合并两个升序链表*/
-SListIntHead SListInt_combine_2(SListIntHead slist1, SListIntHead slist2) {
-	SListIntEntry *h1, *h2, *hn = MF_MALLOC(SListIntEntry);
-	SListIntEntry *ins, *it;
-
-	hn->next = NULL;
-	h1 = slist1->next;
-	h2 = slist2->next;
-
-	it = hn;
-
-	while (h1 && h2) {
-		if (h1->data < h2->data) {
-			ins = h1; 
-			h1 = h1->next;
-		}
-		else {
-			ins = h2;
-			h2 = h2->next;
-		}
-		it->next = ins;
-		it = it->next;
-	}
-	if (h1)
-		it->next = h1;
-	else
-		it->next = h2;
-
-	slist1->next = NULL;
-	slist2->next = NULL;
-
-	return hn;
-}
 
 int main() {
-	SListIntHead slist1 = NULL;
-	SListIntHead slist2 = NULL;
-	  
-	SListInt_initHead(&slist1);
-	SListInt_initHead(&slist2);
+	SListIntHead slist;
+	SListIntEntry *it;
+	int nTempData;
+	SListInt_initHead(&slist);
 
-	SListInt_prepend(slist1, 1);
-	SListInt_prepend(slist1, 3);
-	SListInt_prepend(slist1, 6);
-	SListInt_prepend(slist1, 9);
-	SListInt_prepend(slist1, 10);
-	SListInt_prepend(slist1, 13);
-	SListInt_prepend(slist1, 15);
-	SListInt_prepend(slist1, 17);
-	SListInt_rev(slist1);
-
-	SListInt_prepend(slist2, 2);
-	SListInt_prepend(slist2, 4);
-	SListInt_prepend(slist2, 5);
-	SListInt_prepend(slist2, 6);
-	SListInt_prepend(slist2, 8);
-	SListInt_prepend(slist2, 9);
-	SListInt_prepend(slist2, 10);
-	SListInt_prepend(slist2, 15);
-	SListInt_rev(slist2);
-
-	printf("List1:");
-	for (SListIntEntry *it = slist1->next; it; it = it->next) {
-		printf("%d->", it->data);
+	while (scanf_s("%d", &nTempData)) {
+		SListInt_prepend(slist, nTempData);
 	}
-	puts("");
 
-	printf("List2:");
-	for (SListIntEntry *it = slist2->next; it; it = it->next) {
-		printf("%d->", it->data);
-	}
-	puts("");
+	SListInt_rev(slist);
 	
-	SListIntHead slistResult = SListInt_combine_2(slist1, slist2);
-
-	printf("List3:");
-	for (SListIntEntry *it = slistResult->next; it; it = it->next) {
-		printf("%d->", it->data);
+	for (it = slist; it->next; it = it->next) {
+		printf("%d->", it->next->data);
 	}
 	puts("");
 
-	SListInt_free(slistResult);
-
-	SListInt_clearHead(&slistResult);
+	SListInt_clearHead(&slist);
+	
 	return EXIT_SUCCESS;
 }
+
+
+//CGDS_GENERATE_SINGLELIST(SListInt, int)
+//
+///*以副本的方式合并两个升序链表*/
+//void SListInt_combine(SListIntHead slist1, SListIntHead slist2, SListIntHead slistResult ) {
+//	SListIntEntry *it1 = slist1->next, *it2 = slist2->next;
+//	SListIntEntry *itResult = slistResult;
+//	
+//	while (it1 || it2) {
+//		itResult->next = MF_MALLOC(SListIntEntry);
+//		itResult->next->next = NULL;
+//		itResult = itResult->next;
+//
+//		/**/
+//		if (it1 && it2) {
+//			if (it1->data < it2->data) {
+//				itResult->data = it1->data;
+//				it1 = it1->next;
+//			}
+//			else {
+//				itResult->data = it2->data;
+//				it2 = it2->next;
+//			}
+//		}
+//		else if (it1)
+//			itResult->data = it1->data, it1 = it1->next;
+//		else
+//			itResult->data = it2->data, it2 = it2->next;
+//	}
+//}
+//
+///*以非副本的方式合并两个升序链表*/
+//SListIntHead SListInt_combine_2(SListIntHead slist1, SListIntHead slist2) {
+//	SListIntEntry *h1, *h2, *hn = MF_MALLOC(SListIntEntry);
+//	SListIntEntry *ins, *it;
+//
+//	hn->next = NULL;
+//	h1 = slist1->next;
+//	h2 = slist2->next;
+//
+//	it = hn;
+//
+//	while (h1 && h2) {
+//		if (h1->data < h2->data) {
+//			ins = h1; 
+//			h1 = h1->next;
+//		}
+//		else {
+//			ins = h2;
+//			h2 = h2->next;
+//		}
+//		it->next = ins;
+//		it = it->next;
+//	}
+//	if (h1)
+//		it->next = h1;
+//	else
+//		it->next = h2;
+//
+//	slist1->next = NULL;
+//	slist2->next = NULL;
+//
+//	return hn;
+//}
+//
+//int main() {
+//	SListIntHead slist1 = NULL;
+//	SListIntHead slist2 = NULL;
+//	  
+//	SListInt_initHead(&slist1);
+//	SListInt_initHead(&slist2);
+//
+//	SListInt_prepend(slist1, 1);
+//	SListInt_prepend(slist1, 3);
+//	SListInt_prepend(slist1, 6);
+//	SListInt_prepend(slist1, 9);
+//	SListInt_prepend(slist1, 10);
+//	SListInt_prepend(slist1, 13);
+//	SListInt_prepend(slist1, 15);
+//	SListInt_prepend(slist1, 17);
+//	SListInt_rev(slist1);
+//
+//	SListInt_prepend(slist2, 2);
+//	SListInt_prepend(slist2, 4);
+//	SListInt_prepend(slist2, 5);
+//	SListInt_prepend(slist2, 6);
+//	SListInt_prepend(slist2, 8);
+//	SListInt_prepend(slist2, 9);
+//	SListInt_prepend(slist2, 10);
+//	SListInt_prepend(slist2, 15);
+//	SListInt_rev(slist2);
+//
+//	printf("List1:");
+//	for (SListIntEntry *it = slist1->next; it; it = it->next) {
+//		printf("%d->", it->data);
+//	}
+//	puts("");
+//
+//	printf("List2:");
+//	for (SListIntEntry *it = slist2->next; it; it = it->next) {
+//		printf("%d->", it->data);
+//	}
+//	puts("");
+//	
+//	SListIntHead slistResult = SListInt_combine_2(slist1, slist2);
+//
+//	printf("List3:");
+//	for (SListIntEntry *it = slistResult->next; it; it = it->next) {
+//		printf("%d->", it->data);
+//	}
+//	puts("");
+//
+//	SListInt_free(slistResult);
+//
+//	SListInt_clearHead(&slistResult);
+//	return EXIT_SUCCESS;
+//}
 
 
 /*

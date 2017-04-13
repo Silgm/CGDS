@@ -12,15 +12,14 @@ extern "C" {
 #include <stddef.h>
 #include <limits.h>
 #include <assert.h>
-
+#include <time.h>
 
 #define TEST_CGSD_ARRAYLIST
 #define TEST_CGSD_SLIST
 #define TEST_CGSD_LIST
 #define TEST_CGSD_MDARRAY
-#undef TEST_CGSD_MDARRAY
 
-
+#undef  TEST_CGSD_ARRAYLIST
 
 
 

@@ -148,9 +148,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CGDS_test\cgds_arraylist_test.c" />
+    <ClCompile Include="CGDS_test\cgds_arraylist_test_inc.c" />
     <ClCompile Include="CGDS_test\cgds_list_test.c" />
     <ClCompile Include="CGDS_test\cgds_mdarray.c" />
     <ClCompile Include="CGDS_test\cgds_slist_test.c" />
+    <ClCompile Include="CGDS_test\cgds_slist_test_src.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CGDS\inc\cgds\cgds_arraylist.h" />
@@ -158,6 +160,8 @@
     <ClInclude Include="CGDS\inc\cgds\cgds_mdarray.h" />
     <ClInclude Include="CGDS\inc\cgds\cgds_slist.h" />
     <ClInclude Include="CGDS\inc\cgds\cgds_tool.h" />
+    <ClInclude Include="CGDS_test\cgds_arraylist_test_inc.h" />
+    <ClInclude Include="CGDS_test\cgds_slist_test_inc.h" />
     <ClInclude Include="CGDS_test\tool.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

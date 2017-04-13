@@ -3,17 +3,12 @@
 #define CGDS_ARRAYLIST_H
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 #include <cgds/cgds_tool.h>
 
 #define CGDS_ARRAYLIST_DEFAULT_LEN		(16)
-
-
-	/*name of data , and type of data*/
-#define CGDS_GENERATE_ARRAYLIST( name, type )\
+#define CGDS_GENERATE_ARRAYLIST_INC( name, type )\
 typedef type name##Val;	\
 typedef struct{\
 	name##Val *data;\
@@ -21,24 +16,43 @@ typedef struct{\
 	int _alloced;\
 }name;\
 \
-name * name##_new( int length )\
+int name##_new( name ** arraylist,int length );\
+void name##_free( name *arraylist );\
+int name##_insert( name *arraylist, int index, name##Val data);\
+int name##_append( name *arraylist, name##Val data);\
+int name##_prepend( name *arraylist, name##Val data);\
+void name##_remove_range( name *arraylist, int index, int length);\
+void name##_remove( name *arraylist, int index);\
+void name##_clear(name *arraylist);\
+name##Val name##_nth_data( name *arraylist, int index);\
+int name##_index_of( name *arraylist, int (*PtFuncCompare)( name##Val, name##Val ) , name##Val data);\
+void name##_sort( name *arraylist, int (*PtFuncCompare)( name##Val, name##Val ) );
+
+
+
+
+
+	/*name of data , and type of data*/
+#define CGDS_GENERATE_ARRAYLIST_SRC( name, type )\
+int name##_new( name ** arraylist,int length )\
 {\
 	name *new_arraylist;\
 	if(length <= 0) {\
 		length = CGDS_ARRAYLIST_DEFAULT_LEN;\
 	}\
-	new_arraylist = MF_MALLOC(name);\
+	new_arraylist = (name *)malloc(sizeof(name));\
 	if (!new_arraylist) {\
-		return NULL;\
+		return -1;\
 	}\
 	new_arraylist->_alloced = length;\
 	new_arraylist->length = 0;\
-	new_arraylist->data = MF_MALLOC_LEN(name##Val, length);\
+	new_arraylist->data = (name##Val *)malloc(sizeof(name##Val)*length);\
 	if (new_arraylist->data == NULL) {\
 		free(new_arraylist);\
-		return NULL;\
+		return -1;\
 	}\
-	return new_arraylist;\
+	*arraylist = new_arraylist;\
+	return 0;\
 }\
 \
 void name##_free( name *arraylist )	\
@@ -77,6 +91,13 @@ int name##_insert( name *arraylist, int index, name##Val data)\
 	++(arraylist->length);\
 	return 1;\
 }\
+name##Val name##_nth_data( name *arraylist, int index)\
+{\
+	if ( index < 0 || index > arraylist->length ) {\
+		return ((name##Val)(0));\
+	}\
+	return arraylist->data[index];\
+}\
 \
 int name##_append( name *arraylist, name##Val data)\
 {\
@@ -106,15 +127,42 @@ void name##_clear(name *arraylist)\
 {\
 	arraylist->length = 0;\
 }\
+int name##_index_of( name *arraylist, int (*PtFuncCompare)( name##Val, name##Val ) , name##Val data){\
+	int i;\
+	for (i = 0; i < arraylist->length; ++i) {\
+		if ( !PtFuncCompare(arraylist->data[i], data))\
+			return i;\
+	}\
+	return -1;\
+}\
+\
+static void name##_sort_internal( name##Val *list_data, int list_length, int (*PtFuncCompare)( name##Val, name##Val ) ){\
+	name##Val pivot, tmp;\
+	int i, list1_length, list2_length;\
+	if (list_length <= 1) {\
+		return;\
+	}\
+	pivot = list_data[list_length-1];\
+	list1_length = 0;\
+	for (i=0; i<list_length-1; ++i) {\
+		if (PtFuncCompare(list_data[i], pivot) < 0) {\
+			tmp = list_data[i];\
+			list_data[i] = list_data[list1_length];\
+			list_data[list1_length] = tmp;\
+			++list1_length; \
+		}\
+	}\
+	list2_length = list_length - list1_length - 1;\
+	list_data[list_length-1] = list_data[list1_length];\
+	list_data[list1_length] = pivot;\
+	name##_sort_internal(list_data, list1_length, PtFuncCompare);\
+	name##_sort_internal(list_data + list1_length + 1 , list2_length, PtFuncCompare);\
+}\
+\
+void name##_sort( name *arraylist, int (*PtFuncCompare)( name##Val, name##Val ) )\
+{\
+	name##_sort_internal(arraylist->data, arraylist->length, PtFuncCompare);\
+}\
 
-
-
-#ifdef __cplusplus
-}
 #endif
 
-
-
-
-
-#endif

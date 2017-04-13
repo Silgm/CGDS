@@ -3,15 +3,34 @@
 
 #include "cgds/cgds_tool.h"
 
+
 #define SLIST_NULL ((void *) 0)
 
-#define CGDS_GENERATE_SINGLELIST( name, type )\
+#define CGDS_GENERATE_SINGLELIST_INC( name, type )\
 typedef type name##Val;\
 typedef struct _##name##Entry{\
 	name##Val data;\
 	struct _##name##Entry *next;\
 }name##Entry, * name##Head;\
 \
+void name##_free( name##Head list );\
+int name##_initHead( name##Head *list );\
+void name##_clearHead( name##Head *list);\
+name##Entry * name##_prepend( name##Head list, name##Val data );\
+name##Entry * name##_append( name##Head list, name##Val data );\
+name##Entry * name##_insert( name##Head list, name##Val data, unsigned long index);\
+name##Entry * name##_nth_entry( name##Head list, unsigned long n );\
+name##Val name##_nth_data( name##Head list, unsigned long n);\
+unsigned long name##_length( name##Head list);\
+int name##_to_array( name##Head list, name##Val *buff, unsigned long buffLen);\
+int name##_remove_entry( name##Head list, name##Entry *entry);\
+int name##_remove_index( name##Head list, unsigned long index);\
+void name##_rev( name##Head list );
+
+
+
+
+#define CGDS_GENERATE_SINGLELIST_SRC( name, type )\
 void name##_free( name##Head list )\
 {\
 	name##Entry *entry = list->next;\
@@ -182,6 +201,7 @@ void name##_rev( name##Head list )\
 	thisNode->next = list->next;\
 	list->next = thisNode; \
 }
+
 
 #endif // CGDS_SLIST_H
 

@@ -3,34 +3,34 @@
 
 #ifndef TEST_CGSD_LIST
 
-CGDS_GENERATE_LIST(ListInt, int)
+int main
 
 //CGDS_GENERATE_LIST(ListString, char*)
 
-int main() {
-	ListIntHead list1 = NULL;
-	ListInt_initHead(&list1);
-
-	ListInt_prepend(list1, 10);
-	ListInt_prepend(list1, 20);
-	ListInt_prepend(list1, 30);
-	ListInt_prepend(list1, 40);
-	ListInt_prepend(list1, 50);
-
-	for (ListIntEntry *it = list1->next; it; it = it->next) {
-		printf("%d<=>", it->data);
-	}
-	puts("");
-	ListInt_insert(list1, 5000, 5);
-
-	for (ListIntEntry *it = list1->next; it; it = it->next) {
-		printf("%d<=>", it->data);
-	}
-	printf("\n>>Length:%d.\n", ListInt_length(list1));
-
-	ListInt_free(list1);
-	ListInt_clearHead(&list1);
-}
+//int main() {
+//	ListIntHead list1 = NULL;
+//	ListInt_initHead(&list1);
+//
+//	ListInt_prepend(list1, 10);
+//	ListInt_prepend(list1, 20);
+//	ListInt_prepend(list1, 30);
+//	ListInt_prepend(list1, 40);
+//	ListInt_prepend(list1, 50);
+//
+//	for (ListIntEntry *it = list1->next; it; it = it->next) {
+//		printf("%d<=>", it->data);
+//	}
+//	puts("");
+//	ListInt_insert(list1, 5000, 5);
+//
+//	for (ListIntEntry *it = list1->next; it; it = it->next) {
+//		printf("%d<=>", it->data);
+//	}
+//	printf("\n>>Length:%d.\n", ListInt_length(list1));
+//
+//	ListInt_free(list1);
+//	ListInt_clearHead(&list1);
+//}
 
 //int main() {
 //	ListIntHead list1 = NULL;

@@ -1,29 +1,53 @@
 #include <tool.h>
 
-#include "cgds/cgds_arraylist.h"
+#include "cgds_arraylist_test_inc.h"
 
 #ifndef TEST_CGSD_ARRAYLIST
 
-CGDS_GENERATE_ARRAYLIST(ArrayListInt, int)
+int compare(int a, int b) {
+	return a - b;
+}
 
-int main()
-{
-	ArrayListInt *aln = ArrayListInt_new(20);
-	int index = 0;
-	
-	for (index = 0; index < 20; index++)
-	{
-		ArrayListInt_append(aln, index);
+double random() {
+	static char isFirstTime = 1;
+	if (isFirstTime) {
+		isFirstTime = 0;
+		srand((unsigned int)time(NULL));
+		rand();
 	}
-	for (index = 0; index < 20; index++)
-	{
-		printf("%d\t",aln->data[index]);
-	}
+	return ((double)(rand())) / (RAND_MAX + 1.0f);
+}
 
-	ArrayListInt_free(aln);
+int main() {
+	ArrayListInt *alist;
+	ArrayListInt_new(&alist, 20);
+	int temp = 0;
+
+	for (int loop = 0; loop < 10000000; loop++) {
+		ArrayListInt_append(alist, (int)(random() * 10000000));
+	}
+	//for (int nIndex = 0; nIndex < alist->length; nIndex++) {
+	//	printf("%d, ", ArrayListInt_nth_data(alist, nIndex));
+	//}
+	//puts("");
+
+	printf("\n:%d\n", ArrayListInt_index_of(alist, compare, 5));
+
+	ArrayListInt_sort(alist, compare);
+
+	//for (int nIndex = 0; nIndex < alist->length; nIndex++) {
+	//	printf("%d, ", ArrayListInt_nth_data(alist, nIndex));
+	//}
+	//puts("");
+
+	ArrayListInt_free(alist);
+
 	return EXIT_SUCCESS;
 }
 
+
+
 #endif
+
 
 

@@ -33,6 +33,12 @@
     <ClInclude Include="CGDS\inc\cgds\cgds_mdarray.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="CGDS_test\cgds_slist_test_inc.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CGDS_test\cgds_arraylist_test_inc.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CGDS_test\cgds_arraylist_test.c">
@@ -45,6 +51,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CGDS_test\cgds_mdarray.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CGDS_test\cgds_slist_test_src.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CGDS_test\cgds_arraylist_test_inc.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
