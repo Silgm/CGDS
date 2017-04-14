@@ -4,23 +4,40 @@
 
 #ifndef TEST_CGSD_SLIST
 
+#include <limits.h>
+
+double random() {
+	static char isFirstTime = 1;
+	if (isFirstTime) {
+		isFirstTime = 0;
+		srand((unsigned int)time(NULL));
+		rand();
+	}
+	return ((double)(rand())) / (RAND_MAX + 1.0f);
+}
+
+int compare(int a, int b) {
+	return a - b;
+}
 
 int main() {
 	SListIntHead slist;
-	SListIntEntry *it;
-	int nTempData;
+
+	//SListIntEntry *it;
 	SListInt_initHead(&slist);
 
-	while (scanf_s("%d", &nTempData)) {
-		SListInt_prepend(slist, nTempData);
+	for (int i = 0; i < 10000000; i++) {
+		SListInt_prepend(slist, (int)(10000000 *random()));
 	}
 
-	SListInt_rev(slist);
-	
-	for (it = slist; it->next; it = it->next) {
-		printf("%d->", it->next->data);
-	}
+	SListInt_sort(slist, compare);
+
+	//for (it = slist; it->next; it = it->next) {
+	//	printf("%d->", it->next->data);
+	//}
 	puts("");
+
+	SListInt_free(slist);
 
 	SListInt_clearHead(&slist);
 	

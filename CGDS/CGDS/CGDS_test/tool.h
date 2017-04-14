@@ -19,7 +19,7 @@ extern "C" {
 #define TEST_CGSD_LIST
 #define TEST_CGSD_MDARRAY
 
-#undef  TEST_CGSD_ARRAYLIST
+#undef  TEST_CGSD_SLIST
 
 
 

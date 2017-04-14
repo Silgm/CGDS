@@ -23,8 +23,8 @@ int main() {
 	ArrayListInt_new(&alist, 20);
 	int temp = 0;
 
-	for (int loop = 0; loop < 10000000; loop++) {
-		ArrayListInt_append(alist, (int)(random() * 10000000));
+	for (int loop = 0; loop < 100; loop++) {
+		ArrayListInt_append(alist, (int)(random() * 100));
 	}
 	//for (int nIndex = 0; nIndex < alist->length; nIndex++) {
 	//	printf("%d, ", ArrayListInt_nth_data(alist, nIndex));
@@ -32,7 +32,6 @@ int main() {
 	//puts("");
 
 	printf("\n:%d\n", ArrayListInt_index_of(alist, compare, 5));
-
 	ArrayListInt_sort(alist, compare);
 
 	//for (int nIndex = 0; nIndex < alist->length; nIndex++) {

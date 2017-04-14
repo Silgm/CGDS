@@ -2,7 +2,7 @@
 #define CGDS_SLIST_H_
 
 #include "cgds/cgds_tool.h"
-
+#include <limits.h>
 
 #define SLIST_NULL ((void *) 0)
 
@@ -24,10 +24,12 @@ name##Val name##_nth_data( name##Head list, unsigned long n);\
 unsigned long name##_length( name##Head list);\
 int name##_to_array( name##Head list, name##Val *buff, unsigned long buffLen);\
 int name##_remove_entry( name##Head list, name##Entry *entry);\
-int name##_remove_index( name##Head list, unsigned long index);\
-void name##_rev( name##Head list );
-
-
+int name##_remove_nth( name##Head list, unsigned long index);\
+void name##_rev( name##Head list );\
+int name##_remove_data( name##Head list, int (*PtFuncCompare)( name##Val, name##Val ), name##Val data);\
+name##Entry *name##_find_entry_with_data( name##Head list, int (*PtFuncCompare)( name##Val, name##Val ), name##Val data );\
+unsigned long name##_find_index_with_data( name##Head list, int (*PtFuncCompare)( name##Val, name##Val ), name##Val data );\
+void name##_sort(name##Head list, int(*PtFuncCompare)(name##Val, name##Val));\
 
 
 #define CGDS_GENERATE_SINGLELIST_SRC( name, type )\
@@ -47,11 +49,11 @@ int name##_initHead( name##Head *list )\
 {\
 	*list = (name##Entry *)malloc(sizeof(name##Entry));\
 	if (*list == NULL){\
-		return 1;\
+		return EXIT_FAILURE;\
 	}\
 	(*list)->data = (name##Val)( 0 );\
 	(*list)->next = NULL;\
-	return 0;\
+	return EXIT_SUCCESS;\
 }\
 \
 void name##_clearHead( name##Head *list)\
@@ -144,42 +146,28 @@ int name##_to_array( name##Head list, name##Val *buff, unsigned long buffLen)\
 	name##Entry *rover = NULL;\
 	unsigned int length = 0;\
 	unsigned int i = 0;\
-	length = name##_length(list);\
 	if (buff == NULL) {\
-		return 1;\
+		return EXIT_FAILURE;\
 	}\
-	for (rover = list->next, i = 0; i < length && i < buffLen; ++i) {\
-		buff[i] = rover->data;\
+	for (rover = list, i = 0; rover->next && i < buffLen; ++i) {\
+		buff[i] = rover->next->data;\
 		rover = rover->next;\
 	}\
-	return 0;\
+	return EXIT_SUCCESS;\
 }\
 int name##_remove_entry( name##Head list, name##Entry *entry)\
 {\
 	name##Entry *rover;\
 	if (list->next == NULL || entry == NULL) {\
-		return 0;\
+		return EXIT_FAILURE;\
 	}\
-	if (list->next  == entry) {\
-		list->next  = entry->next;\
-	}\
-	else {\
-		rover = list->next ;\
-		while (rover != NULL && rover->next != entry) {\
-			rover = rover->next;\
-		}\
-		if (rover == NULL) {\
-			return 0;\
-		}\
-		else {\
-			rover->next = entry->next;\
-		}\
-	}\
+	for(rover = list; rover->next != entry; rover = rover->next);\
+	rover->next = rover->next->next;\
 	free(entry);\
-	return 1;\
+	return EXIT_SUCCESS;\
 }\
 \
-int name##_remove_index( name##Head list, unsigned long index)\
+int name##_remove_nth( name##Head list, unsigned long index)\
 {\
 	return name##_remove_entry( list , name##_nth_entry( list, index ));\
 }\
@@ -200,7 +188,94 @@ void name##_rev( name##Head list )\
 	}\
 	thisNode->next = list->next;\
 	list->next = thisNode; \
-}
+}\
+\
+int name##_remove_data( name##Head list, int (*PtFuncCompare)( name##Val, name##Val ), name##Val data){\
+	name##Entry *it = list, *delEntry = NULL;\
+	int counter = 0;\
+	while (it->next){\
+		if (!PtFuncCompare(it->next->data, data)){\
+			delEntry = it->next;\
+			it->next = it->next->next;\
+			free(delEntry);\
+			counter++;\
+		}\
+		else{\
+			it = it->next;\
+		}\
+	}\
+	return counter;\
+}\
+\
+name##Entry *name##_find_entry_with_data( name##Head list, int (*PtFuncCompare)( name##Val, name##Val ), name##Val data ){\
+	name##Entry *it;\
+	for (it = list; it->next; it = it->next) {\
+		if (!PtFuncCompare(it->next->data, data)) {\
+			return it->next;\
+		}\
+	}\
+	return NULL;\
+}\
+\
+unsigned long name##_find_index_with_data( name##Head list, int (*PtFuncCompare)( name##Val, name##Val ), name##Val data ){\
+	name##Entry *it;\
+	unsigned long index = 0;\
+	for (it = list; it->next; it = it->next, index++) {\
+		if (!PtFuncCompare(it->next->data, data)) {\
+			return index;\
+		}\
+	}\
+	return ULONG_MAX;\
+}\
+\
+static name##Entry *name##_sort_internal_noHead( name##Entry **list, int (*PtFuncCompare)( name##Val, name##Val ) ) {\
+	name##Entry *pivot;\
+	name##Entry *rover;\
+	name##Entry *less_list, *more_list;\
+	name##Entry *less_list_end, *more_list_end;\
+	if (*list == NULL || (*list)->next == NULL) {\
+		return *list;\
+	}\
+	pivot = *list;\
+	less_list = NULL;\
+	more_list = NULL;\
+	rover = (*list)->next;\
+	while (rover != NULL) {\
+		name##Entry *next = rover->next;\
+		if (PtFuncCompare(rover->data, pivot->data) < 0) {\
+			rover->next = less_list;\
+			less_list = rover;\
+		}\
+		else {\
+			rover->next = more_list;\
+			more_list = rover;\
+		}\
+		rover = next;\
+	}\
+	less_list_end = name##_sort_internal_noHead(&less_list, PtFuncCompare);\
+	more_list_end = name##_sort_internal_noHead(&more_list, PtFuncCompare);\
+	*list = less_list;\
+	if (less_list == NULL) {\
+		*list = pivot;\
+	}\
+	else {\
+		less_list_end->next = pivot;\
+	}\
+	pivot->next = more_list;\
+	if (more_list == NULL) {\
+		return pivot;\
+	}\
+	else {\
+		return more_list_end;\
+	}\
+}\
+\
+void name##_sort( name##Head list, int (*PtFuncCompare)( name##Val, name##Val ))\
+{\
+	name##Entry **nlist = &(list->next);\
+	name##_sort_internal_noHead( nlist, PtFuncCompare);\
+	list->next = *nlist;\
+}\
 
 
 #endif // CGDS_SLIST_H
