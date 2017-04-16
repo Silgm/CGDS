@@ -2,7 +2,7 @@
 
 #include "cgds_arraylist_test_inc.h"
 
-#ifndef TEST_CGSD_ARRAYLIST
+#ifndef TEST_CGDS_ARRAYLIST
 
 int compare(int a, int b) {
 	return a - b;
@@ -23,24 +23,22 @@ int main() {
 	ArrayListInt_new(&alist, 20);
 	int temp = 0;
 
-	for (int loop = 0; loop < 100; loop++) {
-		ArrayListInt_append(alist, (int)(random() * 100));
+	for (int loop = 0; loop < 10; loop++) {
+		ArrayListInt_append(alist, (int)(random() * 10));
 	}
 	//for (int nIndex = 0; nIndex < alist->length; nIndex++) {
 	//	printf("%d, ", ArrayListInt_nth_data(alist, nIndex));
 	//}
 	//puts("");
 
-	printf("\n:%d\n", ArrayListInt_index_of(alist, compare, 5));
 	ArrayListInt_sort(alist, compare);
 
-	//for (int nIndex = 0; nIndex < alist->length; nIndex++) {
-	//	printf("%d, ", ArrayListInt_nth_data(alist, nIndex));
-	//}
-	//puts("");
+	for (int nIndex = 0; nIndex < alist->length; nIndex++) {
+		printf("%d, ", ArrayListInt_nth_data(alist, nIndex));
+	}
+	puts("");
 
 	ArrayListInt_free(alist);
-
 	return EXIT_SUCCESS;
 }
 

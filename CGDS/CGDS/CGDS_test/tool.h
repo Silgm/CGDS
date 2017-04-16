@@ -14,12 +14,14 @@ extern "C" {
 #include <assert.h>
 #include <time.h>
 
-#define TEST_CGSD_ARRAYLIST
-#define TEST_CGSD_SLIST
-#define TEST_CGSD_LIST
-#define TEST_CGSD_MDARRAY
+#define TEST_CGDS_ARRAYLIST
+#define TEST_CGDS_SLIST
+#define TEST_CGDS_LIST
+#define TEST_CGDS_MDARRAY
+#define TEST_CGDS_STACK
 
-#undef  TEST_CGSD_SLIST
+
+#undef  TEST_CGDS_STACK
 
 
 

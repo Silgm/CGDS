@@ -1,7 +1,7 @@
 #include "cgds/cgds_mdarray.h"
 #include "tool.h"
 
-#ifndef TEST_CGSD_MDARRAY
+#ifndef TEST_CGDS_MDARRAY
 
 CGDS_GENERATE_MALLOC_2D_ARR(char)
 

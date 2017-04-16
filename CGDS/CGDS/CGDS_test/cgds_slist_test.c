@@ -2,7 +2,7 @@
 #include "cgds_slist_test_inc.h"
 
 
-#ifndef TEST_CGSD_SLIST
+#ifndef TEST_CGDS_SLIST
 
 #include <limits.h>
 
@@ -26,8 +26,8 @@ int main() {
 	//SListIntEntry *it;
 	SListInt_initHead(&slist);
 
-	for (int i = 0; i < 10000000; i++) {
-		SListInt_prepend(slist, (int)(10000000 *random()));
+	for (int i = 0; i < 10000; i++) {
+		SListInt_prepend(slist, (int)(10000 *random()));
 	}
 
 	SListInt_sort(slist, compare);

@@ -15,6 +15,9 @@ extern "C" {
 #define MF_MALLOC_LEN(_type, _len)	( (_type *)malloc(sizeof(_type) * (_len) ) )
 #define MF_MALLOC(_type)			( (_type *)malloc(sizeof(_type) ) ) 
 
+#define FAILURE		1
+#define SUCCESS		0
+
 #ifdef __cplusplus
 }
 #endif

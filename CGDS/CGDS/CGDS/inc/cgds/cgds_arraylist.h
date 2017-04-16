@@ -42,17 +42,17 @@ int name##_new( name ** arraylist,int length )\
 	}\
 	new_arraylist = (name *)malloc(sizeof(name));\
 	if (!new_arraylist) {\
-		return -1;\
+		return FAILURE;\
 	}\
 	new_arraylist->_alloced = length;\
 	new_arraylist->length = 0;\
 	new_arraylist->data = (name##Val *)malloc(sizeof(name##Val)*length);\
 	if (new_arraylist->data == NULL) {\
 		free(new_arraylist);\
-		return -1;\
+		return FAILURE;\
 	}\
 	*arraylist = new_arraylist;\
-	return 0;\
+	return SUCCESS;\
 }\
 \
 void name##_free( name *arraylist )	\
@@ -70,26 +70,26 @@ static int name##_enlarge( name *arraylist )\
 	newsize = arraylist->_alloced * 2;\
 	data = realloc(arraylist->data, sizeof(name##Val) * newsize);\
 	if (data == NULL) {\
-		return 0;\
+		return FAILURE;\
 	} else {\
 		arraylist->data = data;\
 		arraylist->_alloced = newsize;\
-		return 1;\
+		return SUCCESS;\
 	}\
 }\
 \
 int name##_insert( name *arraylist, int index, name##Val data)\
 {\
 	if ( index < 0 || index > arraylist->length ) {\
-		return 0;\
+		return FAILURE;\
 	}\
-	if ( arraylist->length + 1 > arraylist->_alloced && !(name##_enlarge)(arraylist) ) {\
-			return 0; \
+	if ( arraylist->length + 1 > arraylist->_alloced && name##_enlarge(arraylist) ) {\
+			return FAILURE; \
 	}\
 	memmove( &arraylist->data[index + 1], &arraylist->data[index], (arraylist->length - index) * sizeof(name##Val) ); \
 	arraylist->data[index] = data;\
 	++(arraylist->length);\
-	return 1;\
+	return SUCCESS;\
 }\
 name##Val name##_nth_data( name *arraylist, int index)\
 {\

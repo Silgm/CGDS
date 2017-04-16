@@ -1,7 +1,7 @@
 #include "cgds/cgds_list.h"
 #include "tool.h"
 
-#ifndef TEST_CGSD_LIST
+#ifndef TEST_CGDS_LIST
 
 int main
 
