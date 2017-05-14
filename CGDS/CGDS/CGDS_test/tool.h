@@ -19,9 +19,9 @@ extern "C" {
 #define TEST_CGDS_LIST
 #define TEST_CGDS_MDARRAY
 #define TEST_CGDS_STACK
+#define TEST_CGDS_QUEUE
 
-
-#undef  TEST_CGDS_STACK
+#undef  TEST_CGDS_QUEUE
 
 
 

@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{6F44D33F-A5AC-4C8A-94E7-60A833BD810D}</ProjectGuid>
+    <ProjectGuid>{1727EE73-5FD2-4553-BE3E-9F510B83C961}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>CGDS</RootNamespace>
+    <RootNamespace>Algorithm</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -89,7 +89,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\CGDS_test;.\CGDS\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\GitHome\CGDS\CGDS\CGDS\CGDS\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -120,6 +120,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>F:\GitHome\CGDS\CGDS\CGDS\CGDS\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,30 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CGDS_test\cgds_arraylist_test.c" />
-    <ClCompile Include="CGDS_test\cgds_arraylist_test_inc.c" />
-    <ClCompile Include="CGDS_test\cgds_list_test.c" />
-    <ClCompile Include="CGDS_test\cgds_mdarray.c" />
-    <ClCompile Include="CGDS_test\cgds_queue_test.c" />
-    <ClCompile Include="CGDS_test\cgds_queue_test_inc.c" />
-    <ClCompile Include="CGDS_test\cgds_slist_test.c" />
-    <ClCompile Include="CGDS_test\cgds_slist_test_src.c" />
-    <ClCompile Include="CGDS_test\cgds_stack_test.c" />
-    <ClCompile Include="CGDS_test\cgds_stack_test_src.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="CGDS\inc\cgds\cgds_arraylist.h" />
-    <ClInclude Include="CGDS\inc\cgds\cgds_list.h" />
-    <ClInclude Include="CGDS\inc\cgds\cgds_mdarray.h" />
-    <ClInclude Include="CGDS\inc\cgds\cgds_queue.h" />
-    <ClInclude Include="CGDS\inc\cgds\cgds_slist.h" />
-    <ClInclude Include="CGDS\inc\cgds\cgds_stack.h" />
-    <ClInclude Include="CGDS\inc\cgds\cgds_tool.h" />
-    <ClInclude Include="CGDS_test\cgds_arraylist_test_inc.h" />
-    <ClInclude Include="CGDS_test\cgds_queue_test_inc.h" />
-    <ClInclude Include="CGDS_test\cgds_slist_test_inc.h" />
-    <ClInclude Include="CGDS_test\cgds_stack_test_inc.h" />
-    <ClInclude Include="CGDS_test\tool.h" />
+    <ClCompile Include="code\src\expressionCalculator.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

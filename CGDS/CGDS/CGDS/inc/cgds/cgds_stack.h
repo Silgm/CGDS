@@ -76,7 +76,7 @@ name##Val name##_pop( name * stack ){\
 \
 name##Val name##_top( name * stack){\
 	if (stack->length)\
-		return stack->data[stack->length];\
+		return stack->data[stack->length - 1];\
 	return ((name##Val)(0));\
 }\
 \
