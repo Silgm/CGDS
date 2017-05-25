@@ -14,7 +14,6 @@ int main() {
 
 	for (int loop = 0; loop < ali->length; loop++) {
 		printf("%d\t", ArrayListInt_nth_data(ali, loop));
-
 	}
 
 

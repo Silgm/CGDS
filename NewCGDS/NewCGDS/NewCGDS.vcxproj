@@ -141,6 +141,15 @@
   <ItemGroup>
     <ClCompile Include="main.c" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="cgds\cgds_arraylist.h" />
+    <ClInclude Include="cgds\cgds_list.h" />
+    <ClInclude Include="cgds\cgds_mdarray.h" />
+    <ClInclude Include="cgds\cgds_queue.h" />
+    <ClInclude Include="cgds\cgds_slist.h" />
+    <ClInclude Include="cgds\cgds_stack.h" />
+    <ClInclude Include="cgds\cgds_tool.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

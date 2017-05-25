@@ -19,4 +19,27 @@
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="cgds\cgds_arraylist.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="cgds\cgds_list.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="cgds\cgds_mdarray.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="cgds\cgds_queue.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="cgds\cgds_slist.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="cgds\cgds_stack.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="cgds\cgds_tool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>
