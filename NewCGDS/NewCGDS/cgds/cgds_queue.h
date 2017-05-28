@@ -79,8 +79,9 @@ int name##_en( name * queue, name##Val data) {\
 name##Val name##_de( name * queue ) {\
 	name##Val resultData;\
 	name##Entry *del_entry;\
+	memset(&resultData, 0, sizeof(resultData));\
 	if (queue == NULL || queue->head == NULL){\
-		return ((name##Val)(0));\
+		return resultData;\
 	}\
 	resultData = queue->head->data;\
 	(queue->_LENGTH)--;\
@@ -97,8 +98,10 @@ name##Val name##_de( name * queue ) {\
 	return resultData;\
 }\
 name##Val name##_first( name * queue ) {\
+	name##Val resultData;\
+	memset(&resultData, 0, sizeof(resultData));\
 	if (queue->tail == NULL)\
-		return ((name##Val)(0));\
+		return resultData;\
 	return queue->tail->data;\
 }\
 \
@@ -107,7 +110,7 @@ int name##_length( name * queue ) {\
 }\
 \
 int name##_isEmpty( name * queue) {\
-	return queue->_LENGTH ? 0 : 1;\
+	return queue->_LENGTH ? NO : YES;\
 }
 //#define CGDS_GENERATE_QUEUE_INC( name, type )\
 //typedef type name##Val;\
