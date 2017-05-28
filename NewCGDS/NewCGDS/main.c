@@ -1,25 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "cgds/cgds_arraylist.h"
+#include <time.h>
 
-CGDS_GENERATE_ARRAYLIST_INC(ArrayListInt, int)
+#include "cgds/cgds_list.h"
+
+
+
+CGDS_GENERATE_LIST_INC(ListInt, int)
 
 int main() {
-	ArrayListInt *ali;
-	ArrayListInt_new(&ali, 16);
-
-	for (int loop = 0; loop < 100; loop++) {
-		ArrayListInt_append(ali, loop);
-	}
-
-	for (int loop = 0; loop < ali->length; loop++) {
-		printf("%d\t", ArrayListInt_nth_data(ali, loop));
-	}
-
-
-	ArrayListInt_free(ali);
 	return EXIT_SUCCESS;
 }
 
 
-CGDS_GENERATE_ARRAYLIST_SRC(ArrayListInt, int)
+CGDS_GENERATE_LIST_SRC(ListInt, int)
