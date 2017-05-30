@@ -154,6 +154,52 @@ static BinaryTreeVal BinaryTree_maxVal_private(BinaryTree tree, int *_out_flag, 
 
 }
 
+int BinaryTree_hasData(BinaryTree tree, BinaryTreeVal data) {
+	int result = NO;
+	if (tree != NULL) {
+		if (tree->data == data) {
+			return YES;
+		}
+		else {
+			result = BinaryTree_hasData(tree->left, data);
+			if (result) {
+				return result;
+			}
+
+			result = BinaryTree_hasData(tree->right, data);
+			if (result) {
+				return result;
+			}
+		}
+	}
+	return result;
+}
+
+long BinaryTree_nodeNums(BinaryTree tree) {
+	if (tree != NULL) {
+		return 1 + BinaryTree_nodeNums(tree->left) + BinaryTree_nodeNums(tree->right);
+	}
+	else {
+		return 0;
+	}
+}
+
+long BinaryTree_getHigh(BinaryTree tree) {
+	int leftHigh;
+	int rightHigh;
+	if (tree != NULL) {
+		leftHigh = BinaryTree_getHigh(tree->left);
+		rightHigh = BinaryTree_getHigh(tree->left);
+		if (rightHigh > leftHigh) {
+			return rightHigh + 1;
+		}
+		else {
+			return leftHigh + 1;
+		}
+	}
+	return 0;
+}
+
 BinaryTreeVal BinaryTree_maxVal(BinaryTree tree, int(*pFunc_Compare)(BinaryTreeVal, BinaryTreeVal)) {
 	int flag = 0;
 	return BinaryTree_maxVal_private(tree, &flag, pFunc_Compare);
@@ -195,14 +241,15 @@ int compare(BinaryTreeVal a, BinaryTreeVal b) {
 	return 0;
 }
 
-
 int main() {
 	int arr[] = { 123,456,488,45658,18,12,1,8,2,4,6,-20200,-22,-8,-999 };
 	BinaryTree tree;
 	BinaryTree_createFromArray_levelOrder(&tree, arr, MF_ARR_LEN(arr));
 	BinaryTree_prevOrderRev(tree, HandleFunc);
-	printf("\nMax:%d", BinaryTree_maxVal(tree, compare));
-
+	printf("\nMax:%d\n", BinaryTree_maxVal(tree, compare));
+	printf("\nHas?:%d\n", BinaryTree_hasData(tree, -999));
+	printf("\nNodeNums:%d\n", BinaryTree_nodeNums(tree));
+	printf("\nTree High:%d\n", BinaryTree_getHigh(tree));
 	return EXIT_SUCCESS;
 }
 
