@@ -2,11 +2,278 @@
 #include <stdlib.h>
 #include <time.h>
 #include <limits.h>
+#include <stdint.h>
 
-#include "cgds/cgds_tool.h"
+#include "cgds/cgds_stack.h"
+#include "cgds/cgds_arraylist.h"
 #include "cgds/cgds_queue.h"
 
+#define ENABLE_2
 
+#ifdef ENABLE_2
+typedef double	FigureType;
+typedef char	OperatorType;
+#define ERROR				-1
+#define ELM_TAG_FIGURE		1
+#define ELM_TAG_OPERATOR	0
+
+typedef struct _ExpressionElm {
+	union Elm
+	{
+		FigureType		unionElm_figure;
+		OperatorType	unionElm_operator;
+	};
+	uint8_t elmTag;
+}ExpressionElm;
+
+CGDS_GENERATE_STACK_INC(ExpressionElmStack, ExpressionElm)
+CGDS_GENERATE_STACK_SRC(ExpressionElmStack, ExpressionElm)
+
+CGDS_GENERATE_ARRAYLIST_INC(ExpressionElmArray, ExpressionElm)
+CGDS_GENERATE_ARRAYLIST_SRC(ExpressionElmArray, ExpressionElm)
+
+static int8_t CurtIsFigure(const char expStr[])
+{
+	if (expStr == NULL)
+		return ERROR;
+	if ((*expStr >= '0' && *expStr <= '9') || (*expStr == '.'))
+		return ELM_TAG_FIGURE;
+	return ELM_TAG_OPERATOR;
+}
+
+static const char* JumpNext(const char expStr[])
+{
+	if (expStr == NULL)
+		return NULL;
+	if (CurtIsFigure(expStr))
+	{
+		for (; *expStr != '\0' && (CurtIsFigure(expStr) || (*expStr == ' ')); ++expStr);
+	}
+	else
+	{
+		for (++expStr; *expStr != '\0' && *expStr == ' '; ++expStr);
+	}
+	return expStr;
+}
+
+static void Convert_Str2NifixExpression(ExpressionElmArray *expArr, const char expStr[])
+{
+	if (expStr == NULL)
+		return;
+
+	ExpressionElm expElm;
+	while (*expStr != '\0')
+	{
+		if (CurtIsFigure(expStr))
+		{
+			expElm.elmTag = ELM_TAG_FIGURE;
+			expElm.unionElm_figure = atof(expStr);
+		}
+		else
+		{
+			expElm.elmTag = ELM_TAG_OPERATOR;
+			expElm.unionElm_operator = *expStr;
+		}
+		expStr = JumpNext(expStr);
+		ExpressionElmArray_append(expArr, expElm);
+	}
+}
+
+static char OperatorPriorityTable[5][5] =
+{
+	/*+    -    *    /    (  */
+	/* + */{ '=', '=', '<', '<', '>' },
+	/* - */{ '=', '=', '<', '<', '>' },
+	/* * */{ '>', '>', '=', '=', '>' },
+	/* / */{ '>', '>', '=', '=', '>' },
+	/* ( */{ '<', '<', '<', '<', '=' }
+};
+
+char OperatorPriorityCompare(char operatorA, char operatorB)
+{
+	size_t row, col;
+	switch (operatorA)
+	{
+	case '+': row = 0; break;
+	case '-': row = 1; break;
+	case '*': row = 2; break;
+	case '/': row = 3; break;
+	case '(': row = 4; break;
+	default: break;
+	}
+
+	switch (operatorB)
+	{
+	case '+': col = 0; break;
+	case '-': col = 1; break;
+	case '*': col = 2; break;
+	case '/': col = 3; break;
+	case '(': col = 4; break;
+	default: break;
+	}
+	return OperatorPriorityTable[row][col];
+}
+
+static void Convert_NifixExpression2PostfixExpression(ExpressionElmArray *expArrNE, ExpressionElmArray *expArrPE)
+{
+	if (expArrNE == NULL || expArrPE == NULL)
+		return;
+
+	ExpressionElmStack *operatorStack;
+	ExpressionElmStack_new(&operatorStack, 32);
+
+	ExpressionElm expElm;
+
+
+	for (int index = 0; index < ExpressionElmArray_length(expArrNE); ++index)
+	{
+		expElm = ExpressionElmArray_nth_data(expArrNE, index);
+		if (expElm.elmTag == ELM_TAG_FIGURE)
+		{
+			ExpressionElmArray_append(expArrPE, expElm); //output
+		}
+		else
+		{
+			if (ExpressionElmStack_isEmpty(operatorStack))
+			{
+				ExpressionElmStack_push(operatorStack, expElm);
+			}
+			else if (expElm.unionElm_operator == '(')
+			{
+				ExpressionElmStack_push(operatorStack, expElm);
+			}
+			else if (expElm.unionElm_operator == ')')
+			{
+				ExpressionElm expElmTemp;
+				for (;;)
+				{
+					if (!ExpressionElmStack_isEmpty(operatorStack))
+					{
+						expElmTemp = ExpressionElmStack_pop(operatorStack);
+						if (expElmTemp.unionElm_operator != '(')
+						{
+							ExpressionElmArray_append(expArrPE, expElmTemp); //output
+						}
+						else
+						{
+							break;
+						}
+					}
+					else
+					{
+						break;
+					}
+				}
+			}
+			else
+			{
+				char compareResult = OperatorPriorityCompare(expElm.unionElm_operator, ExpressionElmStack_top(operatorStack).unionElm_operator);
+				if (compareResult == '>')
+				{
+					ExpressionElmStack_push(operatorStack, expElm);
+				}
+				else
+				{
+					while (!ExpressionElmStack_isEmpty(operatorStack) && OperatorPriorityCompare(expElm.unionElm_operator, ExpressionElmStack_top(operatorStack).unionElm_operator) != '>')
+					{
+						ExpressionElmArray_append(expArrPE, ExpressionElmStack_pop(operatorStack));//Ouput
+					}
+					ExpressionElmStack_push(operatorStack, expElm);
+				}
+			}
+		}
+	}
+	while (!ExpressionElmStack_isEmpty(operatorStack))
+	{
+		ExpressionElmArray_append(expArrPE, ExpressionElmStack_pop(operatorStack));//Ouput
+	}
+	ExpressionElmStack_free(operatorStack);
+}
+
+static FigureType Calculate_PostfixExpression(ExpressionElmArray *expArrPE)
+{
+	ExpressionElmStack *stack;
+	ExpressionElm expElm;
+	ExpressionElmStack_new(&stack, 32);
+
+	for (int index = 0; index < ExpressionElmArray_length(expArrPE); ++index)
+	{
+		expElm = ExpressionElmArray_nth_data(expArrPE, index);
+		if (expElm.elmTag == ELM_TAG_FIGURE)
+		{
+			ExpressionElmStack_push(stack, expElm);
+		}
+		else
+		{
+			ExpressionElm expElmTemp;
+			FigureType firstNum;
+			FigureType secondNum;
+			switch (expElm.unionElm_operator)
+			{
+			case '+':
+				firstNum = ExpressionElmStack_pop(stack).unionElm_figure;
+				secondNum = ExpressionElmStack_pop(stack).unionElm_figure;
+				expElmTemp.elmTag = ELM_TAG_FIGURE;
+				expElmTemp.unionElm_figure = secondNum + firstNum;
+				ExpressionElmStack_push(stack, expElmTemp);
+				break;
+			case '-':
+				firstNum = ExpressionElmStack_pop(stack).unionElm_figure;
+				secondNum = ExpressionElmStack_pop(stack).unionElm_figure;
+				expElmTemp.elmTag = ELM_TAG_FIGURE;
+				expElmTemp.unionElm_figure = secondNum - firstNum;
+				ExpressionElmStack_push(stack, expElmTemp);
+				break;
+			case '*':
+				firstNum = ExpressionElmStack_pop(stack).unionElm_figure;
+				secondNum = ExpressionElmStack_pop(stack).unionElm_figure;
+				expElmTemp.elmTag = ELM_TAG_FIGURE;
+				expElmTemp.unionElm_figure = secondNum * firstNum;
+				ExpressionElmStack_push(stack, expElmTemp);
+				break;
+			case '/':
+				firstNum = ExpressionElmStack_pop(stack).unionElm_figure;
+				secondNum = ExpressionElmStack_pop(stack).unionElm_figure;
+				expElmTemp.elmTag = ELM_TAG_FIGURE;
+				expElmTemp.unionElm_figure = secondNum / firstNum;
+				ExpressionElmStack_push(stack, expElmTemp);
+				break;
+			default:
+				break;
+			}
+		}
+	}
+	FigureType result = ExpressionElmStack_top(stack).unionElm_figure;
+	ExpressionElmStack_free(stack);
+	return result;
+}
+
+FigureType eval(const char expStr[])
+{
+	ExpressionElmArray *expArr = NULL;
+	ExpressionElmArray *convertedExpArr = NULL;
+
+	ExpressionElmArray_new(&expArr, 32);
+	ExpressionElmArray_new(&convertedExpArr, 32);
+
+	Convert_Str2NifixExpression(expArr, expStr);
+	Convert_NifixExpression2PostfixExpression(expArr, convertedExpArr);
+	FigureType reuslt = Calculate_PostfixExpression(convertedExpArr);
+
+	ExpressionElmArray_free(expArr);
+	ExpressionElmArray_free(convertedExpArr);
+
+	return reuslt;
+}
+
+int main(int argc, char *argv[])
+{
+	printf("%f", eval("-10+12"));
+	return EXIT_SUCCESS;
+}
+#endif
+
+#ifdef ENABLE_1
 
 typedef int BinaryTreeVal;
 typedef struct _BinaryTreeNode {
@@ -16,6 +283,7 @@ typedef struct _BinaryTreeNode {
 }BinaryTreeNode, *BinaryTree;
 CGDS_GENERATE_QUEUE_INC(BinaryTreeNodeQueue, BinaryTreeNode *)
 CGDS_GENERATE_QUEUE_SRC(BinaryTreeNodeQueue, BinaryTreeNode *)
+
 /*²ãÐò´´½¨¶þ²æÊ÷*/
 int BinaryTree_createFromArray_levelOrder(BinaryTree *tree, BinaryTreeVal arr[], long arrLength) {
 	BinaryTreeNode *rootNode = NULL, *thisNode = NULL, *newNodeLeft = NULL, *newNodeRight = NULL;
@@ -254,3 +522,4 @@ int main() {
 }
 
 
+#endif

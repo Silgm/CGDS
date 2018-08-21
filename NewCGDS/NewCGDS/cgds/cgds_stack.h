@@ -18,8 +18,8 @@ void name##_free( name *stack );\
 int name##_push( name * stack, name##Val val );\
 name##Val name##_pop( name * stack );\
 name##Val name##_top( name * stack);\
-int name##_length( name * stack );
-
+int name##_length( name * stack );\
+int name##_isEmpty(name * stack );
 
 #define CGDS_GENERATE_STACK_SRC(name, type)\
 int name##_new( name ** stack, int length){\
@@ -71,18 +71,27 @@ int name##_push( name * stack, name##Val val ){\
 name##Val name##_pop( name * stack ){\
 	if (stack->length)\
 		return stack->data[--(stack->length)];\
-	return ((name##Val)(0));\
+	name##Val tempZero;\
+	memset(&tempZero, 0, sizeof(name##Val));\
+	return tempZero;\
 }\
 \
 name##Val name##_top( name * stack){\
 	if (stack->length)\
 		return stack->data[stack->length - 1];\
-	return ((name##Val)(0));\
+	name##Val tempZero;\
+	memset(&tempZero, 0, sizeof(name##Val));\
+	return tempZero;\
 }\
 \
 int name##_length( name * stack ){\
 	return stack->length;\
+}\
+\
+int name##_isEmpty(name * stack) {\
+	return name##_length(stack) > 0 ? 0 : 1;\
 }
+
 
 #endif
 

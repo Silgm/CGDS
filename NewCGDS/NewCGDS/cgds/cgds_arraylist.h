@@ -26,13 +26,13 @@ void name##_remove( name *arraylist, int index);\
 void name##_clear(name *arraylist);\
 name##Val name##_nth_data( name *arraylist, int index);\
 int name##_index_of( name *arraylist, int (*PtFuncCompare)( name##Val, name##Val ) , name##Val data);\
-void name##_sort( name *arraylist, int (*PtFuncCompare)( name##Val, name##Val ) );
+void name##_sort( name *arraylist, int (*PtFuncCompare)( name##Val, name##Val ) );\
+int name##_length( name *arraylist );
 
 
 
 
-
-	/*name of data , and type of data*/
+/*name of data , and type of data*/
 #define CGDS_GENERATE_ARRAYLIST_SRC( name, type )\
 int name##_new( name ** arraylist,int length )\
 {\
@@ -93,8 +93,10 @@ int name##_insert( name *arraylist, int index, name##Val data)\
 }\
 name##Val name##_nth_data( name *arraylist, int index)\
 {\
+	name##Val tempZero;\
+	memset(&tempZero, 0, sizeof(name##Val));\
 	if ( index < 0 || index > arraylist->length ) {\
-		return ((name##Val)(0));\
+		return (tempZero);\
 	}\
 	return arraylist->data[index];\
 }\
@@ -163,6 +165,12 @@ void name##_sort( name *arraylist, int (*PtFuncCompare)( name##Val, name##Val ) 
 {\
 	name##_sort_internal(arraylist->data, arraylist->length, PtFuncCompare);\
 }\
+\
+int name##_length( name *arraylist)\
+{\
+	return arraylist->length;\
+}
+
 
 #endif
 
